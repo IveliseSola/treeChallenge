@@ -1,3 +1,4 @@
+//  UTILS
 
 
 class Node {
@@ -5,6 +6,18 @@ class Node {
         this.data = data;
         this.parent = null;
         this.children = [];
+    }
+}
+
+class NodeFactory extends Node {
+    constructor(data, min, max){
+        super(data)
+        this.min = min;
+        this.max = max;
+    }
+
+    generateNumber () {
+        return Math.floor(Math.random() * (this.max - this.min) + this.min);
     }
 }
 
@@ -32,7 +45,7 @@ traverseDTree (callback) {
 containValue (callback, traversal) { traversal.call(this, callback) };
 
 
-add (data, parentData, traversal) {
+addNodesLeaves (data, parentData, traversal) {
     let child = new Node(data);
     let parent = null;
         
@@ -51,7 +64,24 @@ add (data, parentData, traversal) {
     }
 };
 
-remove(data, parentData, traversal){
+add (nodeFactoryName, nodesLeavesAmount, minValue, maxValue) {
+    let nodeFactory = new NodeFactory(nodeFactoryName, minValue, maxValue);
+    this.root.children.push(nodeFactory);
+    nodeFactory.parent = this.root.data;
+    
+    if (nodesLeavesAmount <=15) {
+        for(let i = 0 ; i < nodesLeavesAmount; i++) {
+            let value = nodeFactory.generateNumber();
+            let child = new Node(value);
+            nodeFactory.children.push(child);
+      }
+    } else {
+        throw new Error('Maximun amount of leaves nodes allow it is 15');
+    }
+    
+}
+
+remove (data, parentData, traversal) {
     let tree = this,
         parent = null,
         childToRemove = null,
@@ -80,113 +110,22 @@ remove(data, parentData, traversal){
 
 }
 
- let tree2 = new Tree('CEO')
+//  let tree2 = new Tree('CEO')
+let newTree =  new Tree('GreatA');
+newTree.add('PapiB', 2, 100, 200);
+console.log(newTree.root.data);
+console.log(newTree.root.children[0].children[0].data);
+console.log(newTree.root.children[0].children[1].data);
 
-
-tree2.add('VP of Happiness', 'CEO', tree2.traverseDTree);
-tree2.add('VP of Finance', 'CEO', tree2.traverseDTree);
-tree2.add('VP of Sadness', 'CEO', tree2.traverseDTree);
+// tree2.add('VP of Happiness', 'CEO', tree2.traverseDTree);
+// tree2.add('VP of Finance', 'CEO', tree2.traverseDTree);
+// tree2.add('VP of Sadness', 'CEO', tree2.traverseDTree);
  
-tree2.add('Director of Puppies', 'VP of Finance', tree2.traverseDTree);
-tree2.add('Manager of Puppies', 'Director of Puppies', tree2.traverseDTree);
-console.log(tree2);
+// tree2.add('Director of Puppies', 'VP of Finance', tree2.traverseDTree);
+// tree2.add('Manager of Puppies', 'Director of Puppies', tree2.traverseDTree);
 
-
-
-// function Node(data) {
-//     this.data = data;
-//     this.parent = null;
-//     this.children = [];
-// }
-
-// function Tree(data) {
-//     var node = new Node(data);
-//     this.root = node;
-// }
-
-// Tree.prototype.traverseDTree = function (callback) {
-//     /*
-//     I could use a while loop to check for depth < 3, 
-//     and call the traverseD function in it,
-//     my tree has a known detph = 2, but for this, 
-//     the function always need to be call from the root.
-//     */
-//     (function traverseD(currentNode) {
-//         for (var i = 0; i < currentNode.children.length; i++) {
-//             traverseD(currentNode.children[i]);
-//         }
-//         callback(currentNode);
-//     })
-//         (this.root);
-// }
-
-// Tree.prototype.containValue = function (callback, traversal) {
-//     traversal.call(this, callback);
-// };
-
-// Tree.prototype.add = function (data, parentData, traversal) {
-//     var child = new Node(data);
-//     parent = null;
-//     callback = function (node) {
-//         if (node.data === parentData) {
-//             parent = node;
-//         }
-//     };
-//     this.containValue(callback, traversal);
-
-//     if (parent) {
-//         parent.children.push(child);
-//         child.parent = parent;
-//     } else {
-//         throw new Error('Cannot add node to a non-existing parent.')
-//     }
-// };
-
-// Tree.prototype.remove = function(data, parentData, traversal){
-//     var tree = this,
-//         parent = null,
-//         childToRemove = null,
-//         index;
-
-//     var callback = function(node){
-//         if (node.data === parentData){
-//             parent = node;
-//         }
-//     };
-//     this.containValue(callback, traversal);
-
-//     if (parent){
-//         index = findIndex(parent.children, data);
-
-//         if(index === undefined){
-//             throw new Error('Node to remove does not exist.');
-//         } else {
-//             childToRemove = paent.children.splice(index, 1);
-//         }
-//     } else {
-//         throw new error('Parent does not exist.');
-//     }
-//     return childToRemove;    
-// }
-
-// findIndex = (arr, data) => {
-//     var index;
-//     for (let i = 0; i < arr.length; i++){
-//         if (arr[i].data === data){
-//             index = i;
-//         }
-//     }
-//     return index;
-
-// }
-
-// let tree1 = new Tree('CEO')
-
-// tree1.add('VP of Happiness', 'CEO', tree1.traverseDTree);
-// tree1.add('VP of Finance', 'CEO', tree1.traverseDTree);
-// tree1.add('VP of Sadness', 'CEO', tree1.traverseDTree);
- 
-// tree1.add('Director of Puppies', 'VP of Finance', tree1.traverseDTree);
-// tree1.add('Manager of Puppies', 'Director of Puppies', tree1.traverseDTree);
-
+// console.log(tree2);
 // console.log(tree1.root.children[1].children[0].data);
+
+
+
