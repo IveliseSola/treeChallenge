@@ -1,0 +1,12 @@
+
+<h1 mat-dialog-title>
+  Root Name</h1>
+    <div mat-dialog-content>
+      <!-- <mat-form-field> -->
+        <input matInput [(ngModel)]="data.name" placeholder="Enter name">
+      <!-- </mat-form-field> -->
+    </div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.name" cdkFocusInitial>Ok</button>
+</div>
