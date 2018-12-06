@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { DialogData } from 'src/app/btn-add-tree/btn-add-tree.component';
+import { DialogData } from 'src/app/tree/tree.component';
 
 @Component({
   selector: 'app-root-modal',
@@ -18,7 +18,4 @@ export class RootModalComponent {
     this.dialogRef.close();
   }
 
-  submitForm() {
-
-  }
 }

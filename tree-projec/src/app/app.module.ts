@@ -7,15 +7,15 @@ import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatDialogModule
 import { AppComponent } from './app.component';
 import { NodeComponent } from './node/node.component';
 import { RootModalComponent } from './root-modal/root-modal.component';
-import { BtnAddTreeComponent } from './btn-add-tree/btn-add-tree.component';
 import { FormsModule } from '@angular/forms';
+import { TreeComponent } from './tree/tree.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NodeComponent,
     RootModalComponent,
-    BtnAddTreeComponent
+    TreeComponent
   ],
   imports: [
     BrowserModule,
