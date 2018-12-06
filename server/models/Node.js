@@ -4,7 +4,7 @@ const extend = require('mongoose-schema-extend');
 
 
 const NodeSchema = new Schema({
-    id: Schema.Types.ObjectId(),
+    _id: Schema.Types.ObjectId,
     name: {
         type: String,
         trim: true
@@ -20,7 +20,7 @@ const NodeSchema = new Schema({
 });
 
 const NodeFactorySchema = NodeSchema.extend({
-    id: Schema.Types.ObjectId(),
+    _id: Schema.Types.ObjectId,
     min: {
         type:Number,
         default: 0
