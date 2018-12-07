@@ -1,12 +1,12 @@
-// const node = require('./Node');
 const mongoose = require('mongoose');
-const Schema = mongoose.schema;
+const Schema = mongoose.Schema;
 
 const TreeSchema = new Schema ({
-    _id: Schema.Types.ObjectId,
     root: {
         type: Schema.Types.ObjectId, ref: 'Node'
     }
 })
 
-module.exports.Tree = mongoose.model('Tree', TreeSchema);
+const Tree = mongoose.model('Tree', TreeSchema);
+
+module.exports = Tree;

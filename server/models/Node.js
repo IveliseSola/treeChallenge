@@ -1,17 +1,14 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.schema;
-const extend = require('mongoose-schema-extend');
-
+const Schema = mongoose.Schema;
 
 const NodeSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     name: {
         type: String,
         trim: true
     },
     parent: {
         type: String,
-        default: undefined,
+        default: undefined
     },    
     children: {
         type: Array,
@@ -19,18 +16,7 @@ const NodeSchema = new Schema({
     }    
 });
 
-const NodeFactorySchema = NodeSchema.extend({
-    _id: Schema.Types.ObjectId,
-    min: {
-        type:Number,
-        default: 0
-    },
-    max: {
-        type: Number,
-        default: 0
-    }
-});
+const Node = mongoose.model('Node', NodeSchema);
 
-module.exports.Node = mongoose.model('Node', NodeSchema);
-module.exports.NodeFactory = mongoose.model('NodeFactory', NodeFactorySchema);
-
+module.exports = Node;
+    
