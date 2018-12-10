@@ -11,28 +11,27 @@ export interface DialogData {
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.css']
 })
-export class TreeComponent {
+export class TreeComponent implements OnInit {
 
-  root: string
-  
-    constructor(public dialog: MatDialog) { }
-  
-    createNode = () =>{
-      
-          }
+  node: {
+    name: string;
+  };
+  constructor(public dialog: MatDialog) { }
 
-    openRootDialog(): void {
-      const dialogRef = this.dialog.open(RootModalComponent, {
-        width: '400px',
-        data: { name: this.root }
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(`The dialog was closed ${result}`);
-        this.root = result;
-      });
-    }
+  ngOnInit() {
+  }
 
+  openRootDialog(): void {
+    const dialogRef = this.dialog.open(RootModalComponent, {
+      width: '400px',
+      data: { name: this.node && this.node.name }
+    });
 
-    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`The dialog was closed ${result}`);
+      this.node = {
+        name: result
+      };
+    });
+  }
 }

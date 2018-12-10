@@ -1,25 +1,8 @@
-
-class Node {
-    constructor(name){
-        this.name = name;
-        this.parent = null;
-        this.children = [];
-    }
-}
-
-class NodeFactory extends Node {
-    constructor(name, min, max){
-        super(name)
-        this.min = min;
-        this.max = max;
-    }
-
-    generateNumber () {
-        return Math.floor(Math.random() * (this.max - this.min) + this.min);
-    }
-}
+import { Node } from './Node';
+import { NodeFactory } from './FactoryNode';
 
 class Tree {
+    root: Node;
     constructor(node){
         this.root = new Node(node);
     }
@@ -73,20 +56,5 @@ remove (nodeFactory) {
 //     }
 //     return childToRemove;    
 // }
-
-}
-
-//  let tree2 = new Tree('CEO')
-let newTree =  new Tree('GreatA');
-newTree.add('PapiB', 2, 100, 200);
-console.log(newTree.root.name);
-console.log(newTree.root.children[0].children[0].name);
-console.log(newTree.root.children[0].children[1].name);
-
-// console.log(tree1.root.children[1].children[0].name);
-
-
-
-module.exports = {
 
 }

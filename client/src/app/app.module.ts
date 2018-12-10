@@ -9,13 +9,15 @@ import { NodeComponent } from './node/node.component';
 import { RootModalComponent } from './root-modal/root-modal.component';
 import { FormsModule } from '@angular/forms';
 import { TreeComponent } from './tree/tree.component';
+import { NodeModalComponent } from './node-modal/node-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NodeComponent,
     RootModalComponent,
-    TreeComponent
+    TreeComponent,
+    NodeModalComponent
   ],
   imports: [
     BrowserModule,

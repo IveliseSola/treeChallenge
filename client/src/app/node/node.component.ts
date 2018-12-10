@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Node } from '../Models/Node';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-node',
@@ -6,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./node.component.css']
 })
 export class NodeComponent implements OnInit {
+  @Input() node: Node;
 
   constructor() { }
 
   ngOnInit() {
   }
+
 
 }
