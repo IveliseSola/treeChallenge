@@ -16,8 +16,8 @@ export interface DialogData {
 })
 export class TreeComponent implements OnInit {
 
-  // tree: any = {};
-  tree = new Tree();
+  tree: any = {};
+  auxVar = false;
 
   constructor(public dialog: MatDialog) { }
 
@@ -32,9 +32,6 @@ export class TreeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`The dialog was closed ${result}`);
-      // this.node = {
-      //   name: result
-      // };
       this.tree = new Tree(result);
     });
   }
@@ -46,6 +43,8 @@ export class TreeComponent implements OnInit {
 
     dialogNode.afterClosed().subscribe(result => {
       this.tree.add(result.name, result.amount, result.min, result.max);
+      console.log(`the min value is: ${result.min}`);
+      this.auxVar = true;
     });
   }
 }

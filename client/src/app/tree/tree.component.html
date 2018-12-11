@@ -3,12 +3,19 @@
 
 <ul class="tree-container">
     <li class="tree">
-        <span class="root" *ngIf="tree.root" (click)="openNodeDialog($event)">{{tree.root}}</span>
+        <span class="root" *ngIf="tree.root" (click)="openNodeDialog($event)">{{tree.root.name}}</span>
         <!-- <app-node *ngIf="tree.root" [node]="tree.root" (click)="openNodeDialog($event)"></app-node> -->
 
-        <ul class="factoryNodes" *ngIf="tree.root.children">
-            <li *ngFor="let child of children">
-                <app-node> </app-node>
+        <ul class="factoryNodes" *ngIf="auxVar">
+            <li *ngFor="let child of tree.root.children">
+                {{child.name}}
+                <ul class="node-leaf">
+                    <li *ngFor="let nodeLeaf of child.children">
+                        <!-- <app-node></app-node> -->
+                        {{nodeLeaf.name}}
+                    </li>
+                </ul>
+
             </li>
         </ul>
     </li>

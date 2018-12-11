@@ -10,8 +10,6 @@ export class NodeFactory extends Node {
         super(name);
         this.min = min;
         this.max = max;
-        // this.parent = '';
-         // this.children;
     }
     generateNumber () {
         return Math.floor(Math.random() * (this.max - this.min) + this.min);

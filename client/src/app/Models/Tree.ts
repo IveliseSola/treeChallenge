@@ -8,8 +8,9 @@ export class Tree {
     }
 
     add(nodeFactoryName, nodesLeavesAmount, minValue, maxValue) {
-
-        const nodeFactory = new NodeFactory(nodeFactoryName, minValue, maxValue);
+        const min = +minValue;
+        const max = +maxValue;
+        const nodeFactory = new NodeFactory(nodeFactoryName, min, max);
         this.root.children.push(nodeFactory);
         nodeFactory.parent = this.root.name;
 
