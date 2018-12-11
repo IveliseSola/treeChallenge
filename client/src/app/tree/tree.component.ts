@@ -16,16 +16,8 @@ export interface DialogData {
 })
 export class TreeComponent implements OnInit {
 
-  tree: any = {};
-
-  // node: {
-  //   name: string;
-  // };
-
-  // tree: {
-  //   root: string;
-  //   nodes: Node[];
-  // };
+  // tree: any = {};
+  tree = new Tree();
 
   constructor(public dialog: MatDialog) { }
 
@@ -48,7 +40,7 @@ export class TreeComponent implements OnInit {
   }
 
   openNodeDialog(event) {
-    const dialogNode = this.dialog.open(NodeModalComponent , {
+    const dialogNode = this.dialog.open(NodeModalComponent, {
       width: '600px'
     });
 
