@@ -1,34 +1,33 @@
 import { Node } from './Node';
-import { NodeFactory } from './FactoryNode';
+import { NodeFactory } from './NodeFactory';
 
-class Tree {
+export class Tree {
     root: Node;
-    constructor(node){
+    constructor(node) {
         this.root = new Node(node);
     }
 
 add (nodeFactoryName, nodesLeavesAmount, minValue, maxValue) {
     //if (this.root.children.includes(nodeFactoryName))
 
-    let nodeFactory = new NodeFactory(nodeFactoryName, minValue, maxValue);
+    const nodeFactory = new NodeFactory(nodeFactoryName, minValue, maxValue);
     this.root.children.push(nodeFactory);
     nodeFactory.parent = this.root.name;
     
-    if (nodesLeavesAmount <=15) {
-        for(let i = 0 ; i < nodesLeavesAmount; i++) {
-            let value = nodeFactory.generateNumber();
-            let child = new Node(value);
+    if (nodesLeavesAmount > 15) {
+        for (let i = 0 ; i < nodesLeavesAmount; i++) {
+            const value = nodeFactory.generateNumber();
+            const child = new Node(value);
             nodeFactory.children.push(child);
       }
-    } else {
-        throw new Error('Maximum amount of leaves nodes allow it is 15');
-    }
-    
+    // } else {
+    //     throw new Error('Maximum amount of leaves nodes allow it is 15');
+    // }
 }
-
-remove (nodeFactory) {
-      //By Id I guess since I can't do it by name, name might be duplicate it.
 }
+// remove (nodeFactory) {
+//       //By Id I guess since I can't do it by name, name might be duplicate it.
+// }
 
 // remove (name, parentname, traversal) {
 //     let tree = this,

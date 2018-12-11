@@ -1,4 +1,4 @@
 
 <button mat-raised-button (click)="openRootDialog()">Create tree</button>
 
-<app-node *ngIf="node" [node]="node"></app-node>
+<app-node *ngIf="tree.root" [node]="tree.root" (click)="openNodeDialog($event)"></app-node>

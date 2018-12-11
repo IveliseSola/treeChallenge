@@ -30,6 +30,9 @@ import { NodeModalComponent } from './node-modal/node-modal.component';
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [RootModalComponent]
+  entryComponents: [
+    RootModalComponent,
+    NodeModalComponent
+  ]
 })
 export class AppModule { }

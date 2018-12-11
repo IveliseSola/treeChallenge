@@ -1,18 +1,18 @@
 <div mat-dialog-content>
   <p>Enter Node Info</p>
-  <mat-form-field>
+  <!-- <mat-form-field> -->
     <input matInput [(ngModel)]="node.name" placeholder="Name" required>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [(ngModel)]="amountChildren" placeholder="Amount of children" required>
-  </mat-form-field>
+  <!-- </mat-form-field>
+  <mat-form-field> -->
+    <input matInput [(ngModel)]="node.amount" placeholder="Amount of children" required>
+  <!-- </mat-form-field> -->
   <p>Interval</p>
-  <mat-form-field>
+  <!-- <mat-form-field> -->
     <input matInput [(ngModel)]="node.min" placeholder="Minimum" required>
-  </mat-form-field>
-  <mat-form-field>
+  <!-- </mat-form-field>
+  <mat-form-field> -->
     <input matInput [(ngModel)]="node.max" placeholder="Maximum" required>
-  </mat-form-field>
+  <!-- </mat-form-field> -->
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>

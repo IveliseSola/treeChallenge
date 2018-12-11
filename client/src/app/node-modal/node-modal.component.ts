@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { NodeFactory } from 'src/app/Models/NodeFactory';
 
 @Component({
   selector: 'app-node-modal',
   templateUrl: './node-modal.component.html',
   styleUrls: ['./node-modal.component.css']
 })
-export class NodeModalComponent implements OnInit {
+export class NodeModalComponent {
+  node = new NodeFactory();
 
-  constructor() { }
+  constructor(
+    public dialogRef: MatDialogRef<NodeModalComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) { }
 
-  ngOnInit() {
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
 }
