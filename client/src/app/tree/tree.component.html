@@ -1,22 +1,37 @@
-<button mat-raised-button (click)="openRootDialog()">
-    Create tree</button>
-
-<ul class="tree-container">
-    <li class="tree">
-        <span class="root" *ngIf="tree.root" (click)="openNodeDialog($event)">{{tree.root.name}}</span>
-        <!-- <app-node *ngIf="tree.root" [node]="tree.root" (click)="openNodeDialog($event)"></app-node> -->
-
-        <ul class="factoryNodes" *ngIf="auxVar">
-            <li *ngFor="let child of tree.root.children">
-                {{child.name}}
-                <ul class="node-leaf">
-                    <li *ngFor="let nodeLeaf of child.children">
-                        <!-- <app-node></app-node> -->
-                        {{nodeLeaf.name}}
-                    </li>
-                </ul>
-
-            </li>
-        </ul>
-    </li>
-</ul>
+<div id="tree-container">
+    <button id="add" class="mdc-icon-button material-icons tree-icons" (click)="openCreateRootDialog()" style="color:green">
+        add</button>
+    <ul class="tree-container">
+        <li class="tree">
+            <i class="material-icons" *ngIf="tree.root">
+                panorama_fish_eye
+            </i>
+            <span class="root" *ngIf="tree.root" (click)="openNodeDialog($event)">
+                {{tree.root.name}}
+            </span>
+            <button class="mdc-icon-button material-icons tree-icons tree-edit" *ngIf="tree.root" style="color:rgb(248, 232, 7)" (click)="openCreateNodeDialog($event)">
+                edit
+            </button>
+            <!-- <app-node *ngIf="tree.root" [node]="tree.root" (click)="openNodeDialog($event)"></app-node> -->
+            <ul class="factoryNodes" *ngIf="auxVar">
+                <li *ngFor="let child of tree.root.children; let i = index" [attr.data-index]="i">
+                    <i id="arrow-icon" class="material-icons">
+                        subdirectory_arrow_right
+                    </i>
+                    {{child.name}}
+                    <button class="mdc-icon-button material-icons tree-icons tree-edit" style="color:rgb(248, 232, 7)" [attr.data-index]="i" (click)="openEditNodeDialog($event)">
+                        edit
+                    </button>
+                    <ul class="node-leaf">
+                        <li *ngFor="let nodeLeaf of child.children">
+                            <i class="material-icons">
+                                arrow_right
+                            </i>
+                            {{nodeLeaf.name}}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

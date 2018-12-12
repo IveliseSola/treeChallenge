@@ -1,0 +1,22 @@
+html, body {
+    height: 100vh;
+    margin:0; 
+    padding:0;
+    overflow: auto;
+}
+ 
+ h1 {
+     text-align: center;
+     /* float: left; */
+     /* margin-left: 40%; */
+     margin-top: 7vh;
+ }
+
+ #img-tree{
+     /* float: right; */
+     /* margin-right: 30%; */
+     /* vertical-align: baseline; */
+     margin-top: 7vh;
+     margin-left: 45%;
+
+ }

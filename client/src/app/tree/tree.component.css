@@ -1,0 +1,28 @@
+
+ul {
+    list-style-type:none;
+}
+
+#tree-container {
+    width: 50%;
+    margin-left: 25%;
+}
+.tree-icons {
+    border-radius: 50px;
+    /* margin: 20px; */
+    margin-top: 15px; 
+}
+
+#add {
+    margin-left: 45%;
+}
+
+ /* Hover effects */
+
+#add:hover {
+    border-color: green;
+}
+
+.tree-edit:hover{
+    border-color: rgb(248, 232, 7);
+}

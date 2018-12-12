@@ -7,6 +7,9 @@ import { NodeModalComponent } from '../node-modal/node-modal.component';
 
 export interface DialogData {
   name: string;
+  amount: number;
+  min: number;
+  max: number;
 }
 
 @Component({
@@ -18,33 +21,48 @@ export class TreeComponent implements OnInit {
 
   tree: any = {};
   auxVar = false;
+  currentChild: number;
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
   }
 
-  openRootDialog(): void {
+  openCreateRootDialog(): void {
     const dialogRef = this.dialog.open(RootModalComponent, {
       width: '400px',
       data: { name: '' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`The dialog was closed ${result}`);
       this.tree = new Tree(result);
     });
   }
-
-  openNodeDialog(event) {
+  openCreateNodeDialog(event) {
     const dialogNode = this.dialog.open(NodeModalComponent, {
       width: '600px'
     });
 
     dialogNode.afterClosed().subscribe(result => {
+      console.log(result.amount);
       this.tree.add(result.name, result.amount, result.min, result.max);
-      console.log(`the min value is: ${result.min}`);
       this.auxVar = true;
+    });
+  }
+
+  openEditNodeDialog(event) {
+    const i = event.target.dataset.index;
+    const dialogEditNode = this.dialog.open(NodeModalComponent, {
+      width: '600px',
+      data: {
+          name: this.tree.root.children[i].name,
+          amount: this.tree.root.children[i].children.length,
+          min: this.tree.root.children[i].min,
+          max: this.tree.root.children[i].max
+      }
+    });
+    dialogEditNode.afterClosed().subscribe(result => {
+      console.log(`The dialog was closed ${result}`);
     });
   }
 }

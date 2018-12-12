@@ -14,7 +14,7 @@ export class Tree {
         this.root.children.push(nodeFactory);
         nodeFactory.parent = this.root.name;
 
-        if (nodesLeavesAmount < 15) {
+        if (nodesLeavesAmount < 16) {
             for (let i = 0; i < nodesLeavesAmount; i++) {
                 const value = nodeFactory.generateNumber();
                 const child = new Node(value);
