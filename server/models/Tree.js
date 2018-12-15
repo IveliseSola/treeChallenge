@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const Node = require('./FactoryNode');
 
 const TreeSchema = new Schema ({
     root: {

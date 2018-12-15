@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, Injectable, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, } from '@angular/material';
 import { RootModalComponent } from '../root-modal/root-modal.component';
+import { NodeModalComponent } from '../node-modal/node-modal.component';
 import { Node } from 'src/app/Models/Node';
 import { Tree } from '../Models/Tree';
-import { NodeModalComponent } from '../node-modal/node-modal.component';
+import { NodeDataService } from 'src/app/Service/node-data.service';
+
 
 export interface DialogData {
   name: string;
@@ -21,9 +23,8 @@ export class TreeComponent implements OnInit {
 
   tree: any = {};
   auxVar = false;
-  currentChild: number;
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private service: NodeDataService) { }
 
   ngOnInit() {
   }
@@ -47,22 +48,21 @@ export class TreeComponent implements OnInit {
       console.log(result.amount);
       this.tree.add(result.name, result.amount, result.min, result.max);
       this.auxVar = true;
+      this.service.postNode(this.tree.root);
     });
   }
-
   openEditNodeDialog(event) {
     const i = event.target.dataset.index;
     const dialogEditNode = this.dialog.open(NodeModalComponent, {
       width: '600px',
       data: {
-          name: this.tree.root.children[i].name,
-          amount: this.tree.root.children[i].children.length,
-          min: this.tree.root.children[i].min,
-          max: this.tree.root.children[i].max
+        name: this.tree.root.children[i].name,
+        amount: this.tree.root.children[i].children.length,
+        min: this.tree.root.children[i].min,
+        max: this.tree.root.children[i].max
       }
     });
     dialogEditNode.afterClosed().subscribe(result => {
-      console.log(`The dialog was closed ${result}`);
     });
   }
 }

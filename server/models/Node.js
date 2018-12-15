@@ -1,10 +1,12 @@
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const NodeSchema = new Schema({
-    name: {
+    nodeName: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     parent: {
         type: String,
@@ -13,7 +15,20 @@ const NodeSchema = new Schema({
     children: {
         type: Array,
         default: []
-    }    
+    },
+    nodeType: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    min: {
+        type: Number,
+        default: 0
+    },
+    max: {
+        type: Number,
+        default: 0
+    }   
 });
 
 const Node = mongoose.model('Node', NodeSchema);

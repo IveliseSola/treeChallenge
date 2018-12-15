@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/IveliseSola/treeChallenge#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mongoose": "^5.3.15",
-    "mongoose-schema-extend": "^0.2.2"
+    "mongoose-schema-extend": "^0.2.2",
+    "nodemon": "^1.18.9"
   }
 }
