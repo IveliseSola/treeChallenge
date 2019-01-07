@@ -1,24 +1,26 @@
+// MODULES
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-// import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatDialogModule } from '@angular/material';
-// import { MatTreeNestedDataSource } from '@angular/material/tree';
-// import { NestedTreeControl } from '@angular/cdk/tree';
 import { FormsModule } from '@angular/forms';
+// import { RouterModule, Routes } from '@angular/router';
 
+// COMPONENTS
 import { AppComponent } from './app.component';
 import { NodeComponent } from './node/node.component';
 import { RootModalComponent } from './root-modal/root-modal.component';
 import { TreeComponent } from './tree/tree.component';
 import { NodeModalComponent } from './node-modal/node-modal.component';
 
-// MATERIAL
-// import {DragDropModule} from '@angular/cdk/drag-drop';
-// import {ScrollingModule} from '@angular/cdk/scrolling';
-// import {CdkTableModule} from '@angular/cdk/table';
-// import {CdkTreeModule} from '@angular/cdk/tree';
-import {
+// MATERIAL MODULES
+import { MatDialogModule } from '@angular/material';
+
+// import { DragDropModule } from '@angular/cdk/drag-drop';
+// import { ScrollingModule } from '@angular/cdk/scrolling';
+// import { CdkTableModule } from '@angular/cdk/table';
+// import { CdkTreeModule } from '@angular/cdk/tree';
+// import {
 //   MatAutocompleteModule,
 //   MatBadgeModule,
 //   MatBottomSheetModule,
@@ -28,7 +30,7 @@ import {
 //   MatCheckboxModule,
 //   MatChipsModule,
 //   MatDatepickerModule,
-  MatDialogModule
+//   MatDialogModule,
 //   MatDividerModule,
 //   MatExpansionModule,
 //   MatGridListModule,
@@ -54,8 +56,11 @@ import {
 //   MatToolbarModule,
 //   MatTooltipModule,
 //   MatTreeModule,
-} from '@angular/material';
+//   MatFormFieldModule
+// } from '@angular/material';
 // import { MatTreeComponent } from './Components/mat-tree/mat-tree.component';
+// import { MatTreeNestedDataSource } from '@angular/material/tree';
+// import { NestedTreeControl } from '@angular/cdk/tree';
 
 @NgModule({
   declarations: [
@@ -64,19 +69,19 @@ import {
     RootModalComponent,
     TreeComponent,
     NodeModalComponent,
-   // MatTreeComponent
+    // MatTreeComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    //MatButtonModule,
-    //MatCheckboxModule,
+    // MatButtonModule,
+    // MatCheckboxModule,
     HttpClientModule,
     // MatFormFieldModule,
-    MatDialogModule,
+    // MatDialogModule,
     FormsModule,
     // MatTreeNestedDataSource,
-    // NestedTreeControl
+    // NestedTreeControl,
     // CdkTableModule,
     // CdkTreeModule,
     // DragDropModule,
@@ -90,7 +95,7 @@ import {
     // MatChipsModule,
     // MatStepperModule,
     // MatDatepickerModule,
-    // MatDialogModule,
+    MatDialogModule,
     // MatDividerModule,
     // MatExpansionModule,
     // MatGridListModule,
@@ -115,7 +120,7 @@ import {
     // MatToolbarModule,
     // MatTooltipModule,
     // MatTreeModule,
-    // ScrollingModule,
+    // ScrollingModule
   ],
   exports: [
   ],

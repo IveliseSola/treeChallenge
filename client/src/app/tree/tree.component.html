@@ -3,22 +3,21 @@
         add</button>
     <ul class="tree-container">
         <li class="tree">
-            <i class="material-icons" *ngIf="tree.root">
+            <i class="material-icons" *ngIf="filenode">
                 panorama_fish_eye
             </i>
-            <span class="root" *ngIf="tree.root" (click)="openNodeDialog($event)">
-                {{tree.root.name}}
+            <span class="root" *ngIf="filenode" (click)="openNodeDialog($event)">
+                {{filenode.filename}}
             </span>
-            <button class="mdc-icon-button material-icons tree-icons tree-edit" *ngIf="tree.root" style="color:rgb(248, 232, 7)" (click)="openCreateNodeDialog($event)">
+            <button class="mdc-icon-button material-icons tree-icons tree-edit" *ngIf="filenode" style="color:rgb(248, 232, 7)" (click)="openCreateNodeDialog($event)">
                 edit
             </button>
-            <!-- <app-node *ngIf="tree.root" [node]="tree.root" (click)="openNodeDialog($event)"></app-node> -->
-            <ul class="factoryNodes" *ngIf="auxVar">
-                <li *ngFor="let child of tree.root.children; let i = index" [attr.data-index]="i">
+            <ul class="factoryNodes" *ngIf="filenode">
+                <li *ngFor="let child of filenode.children; let i = index" [attr.data-index]="i">
                     <i id="arrow-icon" class="material-icons">
                         subdirectory_arrow_right
                     </i>
-                    {{child.name}}
+                    {{child.filename}}
                     <button class="mdc-icon-button material-icons tree-icons tree-edit" style="color:rgb(248, 232, 7)" [attr.data-index]="i"
                         (click)="openEditNodeDialog($event)">
                         edit
@@ -28,7 +27,7 @@
                             <i class="material-icons">
                                 arrow_right
                             </i>
-                            {{nodeLeaf.name}}
+                            {{nodeLeaf.filename}}
                         </li>
                     </ul>
                 </li>

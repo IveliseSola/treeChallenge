@@ -1,16 +1,18 @@
+
 const express = require('express');
+const router = require('express').Router();
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const db = require('./models/NodeFile');
+const db = require('./models/FileNode');
 
 const PORT = 3000;
-const app = express();
-app.use(bodyParser.urlencoded({
-    extended: true
-  }));
 
-mongoose.connect("mongodb://localhost:27017/TreeAngularApp");
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+mongoose.connect("mongodb://localhost:27017/TreeAngularApp", { useNewUrlParser: true });
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
@@ -20,54 +22,70 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.post('/home', function (req, res) {
-    db.NodeFile.create(req.body)
-    .then(function(dbNode){
-        return db.NodeFile.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
-    })
-    })
-    
-    // let modelNode = new model(req.body);
-    // if (req.body.mode == 'Save') {
-    //     modelNode.save(function (err, res) {
-    //         if (err) {
-    //             res.send(err);
-    //         } else {
-    //             res.send({ data: 'Record has been Inserted!' });
-    //         }
-    //     });
-    // } else {
-    //     model.findByIdAndUpdate(req.body.id, { name: req.body.name, type: req.body.type, children: req.body.children },
-    //         function (err, data) {
-    //             if (err) {
-    //                 res.send(err);
-    //             } else {
-    //                 res.send({ data: 'Record has been Update!' });
-    //             }
-    //         });
-    // }
-})
-
-app.post('/delete', function (req, res) {
-    model.remove({ _id: req.body.id }, function (err) {
-        if (err) {
-            res.send(err);
-        } else {
-            res.send({ data: 'Record has been Deleted!' })
-        }
+router.route('/').post(
+    function (req, res) {
+        db.create(req.body)
+            .then(function (node) {
+                res.json(node);
+            }).catch(function (err) {
+                res.json(err);
+            });
     });
-})
 
-app.get('/getNodes', function (req, res) {
-    model.find({}, function (err, data) {
-        if (err) {
-            res.send(err);
-        } else {
-            console.log(data);
-            res.send(data);
-        }
+router.route('/').get(
+    function (req, res) {
+        db.find({})
+            .then(function (node) {
+                res.json(node);
+            })
+            .catch(function (err) {
+                res.json(err);
+            });
     });
-})
+
+router.route('/:position').get(
+    function (req, res) {
+        db.aggregate([
+            {
+                $project: {
+                    child: { $arrayElemAt: ['$children', parseInt(req.params.position)] }
+                }
+            }
+        ]).exec(function (err, child) {
+            console.log(err);
+            res.json(child);
+            console.log(child);
+        });
+    });
+
+router.route('/:data').put(
+    function (req, res) {
+        db.aggregate([
+            {
+                $project: {
+                    child: { $arrayElemAt: ['$children', parseInt(req.params.data.position)] }
+                }
+            }
+        ]).exec(function (err, child) {
+                  db.update( {'$children': child},
+                             { $set:{ '$filename': req.params.data.name , 
+                                      '$minValue': req.params.data.minValue,
+                                      '$maxValue': req.params.data.maxValue } })
+        })
+    })
+router.route('/').put(
+    function (req, res) {
+        db.findOneAndUpdate({ 'type': 'root' }, req.body)
+            .then(function (node) {
+                res.json(node);
+                console.log('hey i am inside the put request backend');
+            }).catch(function (err) {
+                res.json(err);
+            });
+    }
+)
+
+app.use(router);
 
 app.listen(PORT, function () {
     console.log('listening on port 3000!');

@@ -13,7 +13,7 @@ export class NodeModalComponent {
 // creating a node
   node = new NodeFactory();
 // editing a node
-  // @Input() nodefactory = new NodeFactory();
+ // @Input() nodefactory = new NodeFactory();
 
   constructor(
     public dialogRef: MatDialogRef<NodeModalComponent>,

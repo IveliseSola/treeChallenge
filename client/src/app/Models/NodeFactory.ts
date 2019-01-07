@@ -5,7 +5,7 @@ export class NodeFactory extends Node {
     max: number;
     parent: string;
     children: any[];
-    amount: number;
+    // amount: number;
     constructor(name?, min?, max?) {
         super(name);
         this.min = min;

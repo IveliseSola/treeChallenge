@@ -1,6 +1,5 @@
 
-// module.exports = {
-//     Node: require('./Node'),
-//     FactoryNode: require('./FactoryNode'),
-//     Tree: require('./Tree')
-// };
+module.exports = {
+    FileNode: require('./FileNode'),
+    Tree: require('./Tree')
+};

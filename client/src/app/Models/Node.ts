@@ -4,6 +4,7 @@ export class Node {
     name: string;
     parent: string;
     children: any[];
+    type: string;
     constructor(name?) {
         this.name = name;
         this.parent = '';
