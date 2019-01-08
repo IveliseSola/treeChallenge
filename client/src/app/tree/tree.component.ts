@@ -88,16 +88,10 @@ export class TreeComponent implements OnInit {
           amount: child.leaves.length,
           min: child.minValue,
           max: child.maxValue,
-          id: child._id
         }
       });
       dialogEditNode.afterClosed().subscribe(result => {
-        console.log(result);
         const newNodeFactory = this.modifyTree(result);
-        // const ids = {
-        //   idRoot: this.root.id,
-        //   idNF: child._id
-        // };
         this.service.updateChild(this.root.id, child._id, newNodeFactory).subscribe(
           val => {
             console.log('PUT call successful value returned in body', val);
@@ -109,17 +103,6 @@ export class TreeComponent implements OnInit {
             console.log('The PUT observable is now completed.');
           }
         );
-        // this.service.updateTree(newNodeFactory).subscribe(
-        //   val => {
-        //     console.log('PUT call successful value returned in body', val);
-        //   },
-        //   response => {
-        //     console.log('PUT call in error', response);
-        //   },
-        //   () => {
-        //     console.log('The PUT observable is now completed.');
-        //   }
-        // );
       });
     });
   }
@@ -135,7 +118,7 @@ export class TreeComponent implements OnInit {
         nodeFactory.children.push(nodeLeaf);
       }
     } else {
-      throw new Error('Maximum amount of children nodes allow is 15');
+      throw new Error('Maximum amount allow is 15');
     }
     console.log(nodeFactory);
     return nodeFactory;
