@@ -37,6 +37,7 @@ export class TreeComponent implements OnInit {
       };
     });
   }
+
   openCreateRootDialog(): void {
     const dialogRef = this.dialog.open(RootModalComponent, {
       width: '400px',
@@ -56,10 +57,11 @@ export class TreeComponent implements OnInit {
       );
     });
   }
+
   openCreateNodeDialog(event) {
     const dialogNode = this.dialog.open(NodeModalComponent, {
       width: '600px',
-      data: {name: ''}
+      data: { name: '' }
     });
     dialogNode.afterClosed().subscribe(result => {
       const nodeFactory = this.modifyTree(result);
@@ -77,6 +79,7 @@ export class TreeComponent implements OnInit {
       );
     });
   }
+
   openEditNodeDialog(event) {
     const position = event.target.dataset.index;
     this.service.getChild(position).subscribe(data => {
@@ -92,6 +95,16 @@ export class TreeComponent implements OnInit {
       });
       dialogEditNode.afterClosed().subscribe(result => {
         const newNodeFactory = this.modifyTree(result);
+        // this.root.children.splice(position, 1);
+        this.root.children[position].leaves.length = 0;
+        this.root.children[position] = {
+          id: child._id,
+          name: newNodeFactory.name,
+          minValue: newNodeFactory.minValue,
+          maxValue: newNodeFactory.maxValue,
+          leaves: newNodeFactory.leaves
+        };
+        // this.root.children.push(newNodeFactory);
         this.service.updateChild(this.root.id, child._id, newNodeFactory).subscribe(
           val => {
             console.log('PUT call successful value returned in body', val);
@@ -115,7 +128,7 @@ export class TreeComponent implements OnInit {
       for (let i = 0; i < node.amount; i++) {
         const value = Math.floor(Math.random() * (max - min) + min);
         const nodeLeaf = new NodeLeaf(i, value.toString());
-        nodeFactory.children.push(nodeLeaf);
+        nodeFactory.leaves.push(nodeLeaf);
       }
     } else {
       throw new Error('Maximum amount allow is 15');
