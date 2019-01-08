@@ -9,10 +9,8 @@ import { DialogData } from 'src/app/tree/tree.component';
 })
 export class RootModalComponent {
 
-  constructor(
-    public dialogRef: MatDialogRef<RootModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) { }
+  constructor( public dialogRef: MatDialogRef<RootModalComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   onNoClick(): void {
     this.dialogRef.close();

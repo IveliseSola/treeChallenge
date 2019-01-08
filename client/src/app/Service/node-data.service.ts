@@ -51,20 +51,20 @@ export class NodeDataService {
       catchError(this.handleError));
   }
 
-  updateChild(data): Observable<any> {
-    return this.http.put(apiUrl, data, httpOptions)
+  updateChild(idRoot, idNF, data): Observable<any> {
+    return this.http.put(apiUrl, { idRoot, idNF, data}, httpOptions)
     .pipe(
     catchError(this.handleError)
     );
   }
-  postNode(data): Observable<any> {
+  addNode(data): Observable<any> {
     return this.http.post(apiUrl, data, httpOptions)
       .pipe(
       catchError(this.handleError)
       );
   }
-  updateTree(data): Observable<any> {
-    return this.http.put(apiUrl, data, httpOptions)
+  updateTree(id, data): Observable<any> {
+    return this.http.post(apiUrl + id, data, httpOptions)
       .pipe(
       catchError(this.handleError)
       );

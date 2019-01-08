@@ -2,10 +2,11 @@ import { Component, Injectable, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, } from '@angular/material';
 import { RootModalComponent } from '../root-modal/root-modal.component';
 import { NodeModalComponent } from '../node-modal/node-modal.component';
-// import { Node } from 'src/app/Models/Node';
-// import { Tree } from '../Models/Tree';
 import { NodeDataService } from 'src/app/Service/node-data.service';
-import { FileNode } from 'src/app/Models/FileNode';
+
+import { Root } from 'src/app/Models/Root';
+import { NodeFactory } from 'src/app/Models/NodeFactory';
+import { NodeLeaf } from 'src/app/Models/NodeLeaf';
 
 
 export interface DialogData {
@@ -13,7 +14,6 @@ export interface DialogData {
   amount: number;
   min: number;
   max: number;
- // i: number;
 }
 
 @Component({
@@ -23,30 +23,32 @@ export interface DialogData {
 })
 export class TreeComponent implements OnInit {
 
-  filenode = new FileNode();
-  child = new FileNode();
+  root = new Root();
+  nodeFactory = new NodeFactory();
 
   constructor(public dialog: MatDialog, private service: NodeDataService) { }
 
   ngOnInit() {
-    this.service.getRoot().subscribe(data => this.filenode = data[0]);
+    this.service.getRoot().subscribe(data => {
+      this.root = {
+        name: data[0].name,
+        id: data[0]._id,
+        children: data[0].children
+      };
+    });
   }
-
   openCreateRootDialog(): void {
     const dialogRef = this.dialog.open(RootModalComponent, {
       width: '400px',
       data: { name: '' }
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      this.filenode = {
-        filename: result,
-        type: 'root',
+      this.root = {
+        name: result,
         children: [],
-        minValue: 0,
-        maxValue: 0
+        id: ''
       };
-      this.service.postNode(this.filenode).subscribe(
+      this.service.addNode(this.root).subscribe(
         filenode => {
         }, err => {
           console.log(err);
@@ -56,24 +58,13 @@ export class TreeComponent implements OnInit {
   }
   openCreateNodeDialog(event) {
     const dialogNode = this.dialog.open(NodeModalComponent, {
-      width: '600px'
+      width: '600px',
+      data: {name: ''}
     });
     dialogNode.afterClosed().subscribe(result => {
-      // this.auxVar = true;
-      const max = +result.max;
-      const min = +result.min;
-      const nodeFactory = new FileNode(result.name, 'factory', min, max);
-      if (result.amount < 16) {
-        for (let i = 0; i < result.amount; i++) {
-          const value = Math.floor(Math.random() * (max - min) + min);
-          const child = new FileNode(value.toString(), 'leaf');
-          nodeFactory.children.push(child);
-        }
-      } else {
-        throw new Error('Maximum amount of children nodes allow is 15');
-      }
-      this.filenode.children.push(nodeFactory);
-      this.service.updateTree(this.filenode).subscribe(
+      const nodeFactory = this.modifyTree(result);
+      this.root.children.push(nodeFactory);
+      this.service.updateTree(this.root.id, nodeFactory).subscribe(
         val => {
           console.log('PUT call successful value returned in body', val);
         },
@@ -89,19 +80,25 @@ export class TreeComponent implements OnInit {
   openEditNodeDialog(event) {
     const position = event.target.dataset.index;
     this.service.getChild(position).subscribe(data => {
-      this.child = data[0].child;
+      const child = data[0].child;
       const dialogEditNode = this.dialog.open(NodeModalComponent, {
         width: '600px',
         data: {
-          name: this.child.filename,
-          amount: this.child.children.length,
-          min: this.child.minValue,
-          max: this.child.maxValue,
-          i: position
+          name: child.name,
+          amount: child.leaves.length,
+          min: child.minValue,
+          max: child.maxValue,
+          id: child._id
         }
       });
       dialogEditNode.afterClosed().subscribe(result => {
-        this.service.updateChild(data).subscribe(
+        console.log(result);
+        const newNodeFactory = this.modifyTree(result);
+        // const ids = {
+        //   idRoot: this.root.id,
+        //   idNF: child._id
+        // };
+        this.service.updateChild(this.root.id, child._id, newNodeFactory).subscribe(
           val => {
             console.log('PUT call successful value returned in body', val);
           },
@@ -112,7 +109,36 @@ export class TreeComponent implements OnInit {
             console.log('The PUT observable is now completed.');
           }
         );
+        // this.service.updateTree(newNodeFactory).subscribe(
+        //   val => {
+        //     console.log('PUT call successful value returned in body', val);
+        //   },
+        //   response => {
+        //     console.log('PUT call in error', response);
+        //   },
+        //   () => {
+        //     console.log('The PUT observable is now completed.');
+        //   }
+        // );
       });
     });
   }
+
+  modifyTree(node) {
+    const max = +node.max;
+    const min = +node.min;
+    const nodeFactory = new NodeFactory(node.name, min, max);
+    if (node.amount < 16) {
+      for (let i = 0; i < node.amount; i++) {
+        const value = Math.floor(Math.random() * (max - min) + min);
+        const nodeLeaf = new NodeLeaf(i, value.toString());
+        nodeFactory.children.push(nodeLeaf);
+      }
+    } else {
+      throw new Error('Maximum amount of children nodes allow is 15');
+    }
+    console.log(nodeFactory);
+    return nodeFactory;
+  }
+
 }

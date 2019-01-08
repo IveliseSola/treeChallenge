@@ -10,10 +10,7 @@ import { Input } from '@angular/core';
   styleUrls: ['./node-modal.component.css']
 })
 export class NodeModalComponent {
-// creating a node
-  node = new NodeFactory();
-// editing a node
- // @Input() nodefactory = new NodeFactory();
+  // node = new NodeFactory();
 
   constructor(
     public dialogRef: MatDialogRef<NodeModalComponent>,

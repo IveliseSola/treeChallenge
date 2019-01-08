@@ -4,7 +4,7 @@ const router = require('express').Router();
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const db = require('./models/FileNode');
+const db = require('./models/Root');
 
 const PORT = 3000;
 
@@ -22,6 +22,7 @@ app.use(function (req, res, next) {
     next();
 });
 
+// Creates a root
 router.route('/').post(
     function (req, res) {
         db.create(req.body)
@@ -31,7 +32,7 @@ router.route('/').post(
                 res.json(err);
             });
     });
-
+// Get the tree
 router.route('/').get(
     function (req, res) {
         db.find({})
@@ -42,7 +43,7 @@ router.route('/').get(
                 res.json(err);
             });
     });
-
+// Get a NodeFactory by position
 router.route('/:position').get(
     function (req, res) {
         db.aggregate([
@@ -52,39 +53,55 @@ router.route('/:position').get(
                 }
             }
         ]).exec(function (err, child) {
-            console.log(err);
-            res.json(child);
-            console.log(child);
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(child);
+            }
         });
     });
-
-router.route('/:data').put(
-    function (req, res) {
-        db.aggregate([
-            {
-                $project: {
-                    child: { $arrayElemAt: ['$children', parseInt(req.params.data.position)] }
-                }
-            }
-        ]).exec(function (err, child) {
-                  db.update( {'$children': child},
-                             { $set:{ '$filename': req.params.data.name , 
-                                      '$minValue': req.params.data.minValue,
-                                      '$maxValue': req.params.data.maxValue } })
-        })
-    })
+// Update a FactoryNode
 router.route('/').put(
     function (req, res) {
-        db.findOneAndUpdate({ 'type': 'root' }, req.body)
-            .then(function (node) {
-                res.json(node);
-                console.log('hey i am inside the put request backend');
-            }).catch(function (err) {
-                res.json(err);
-            });
+        db.findOne({ _id: req.body.idRoot }, function (err, root) {
+            if (err) {
+                console.log(err);
+            } else {
+                root.children.id(req.body.idNF).remove();
+                const aux = {
+                    name: req.body.data.name,
+                    minValue: req.body.data.minValue,
+                    maxValue: req.body.data.maxValue,
+                    leaves: req.body.data.children
+                }
+                root.children.push(aux);
+                root.save(function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        });
+    });
+// Add a node to the tree
+router.route('/:id').post(
+    function (req, res) {
+        db.findOne({ _id: req.params.id }, function (err, root) {
+            if (err) {
+                console.log(err);
+            } else {
+                const aux = {
+                    name: req.body.name,
+                    minValue: req.body.minValue,
+                    maxValue: req.body.maxValue,
+                    leaves: req.body.children
+                }
+                root.children.push(aux);
+                root.save();
+            }
+        })
     }
 )
-
 app.use(router);
 
 app.listen(PORT, function () {

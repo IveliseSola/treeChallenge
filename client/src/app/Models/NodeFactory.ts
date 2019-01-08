@@ -1,17 +1,16 @@
 import { Node } from './Node';
+import { NodeLeaf } from './NodeLeaf';
 
-export class NodeFactory extends Node {
-    min: number;
-    max: number;
-    parent: string;
-    children: any[];
-    // amount: number;
-    constructor(name?, min?, max?) {
-        super(name);
-        this.min = min;
-        this.max = max;
-    }
-    generateNumber () {
-        return Math.floor(Math.random() * (this.max - this.min) + this.min);
+export class NodeFactory {
+    _id: number;
+    name: string;
+    minValue: number;
+    maxValue: number;
+    children: NodeLeaf[];
+    constructor( name?, minValue?, maxValue?, children?) {
+        this.name = name;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.children = [];
     }
 }

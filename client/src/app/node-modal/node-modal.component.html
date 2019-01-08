@@ -1,20 +1,27 @@
+<h1 mat-dialog-title>Node</h1>
 <div mat-dialog-content>
   <p>Enter Node Info</p>
-  <!-- <mat-form-field> -->
-    <input matInput [(ngModel)]="data? data.name : node.name" placeholder="Name" required>
-  <!-- </mat-form-field>
-  <mat-form-field> -->
-    <input matInput [(ngModel)]="data? data.amount : node.amount" placeholder="Amount of children" required>
-  <!-- </mat-form-field> -->
+
+  <!-- <input matInput [(ngModel)]="data? data.name : node.name" placeholder="Name" required>
+  <input matInput [(ngModel)]="data? data.amount : node.amount" placeholder="Amount of children" required>
   <p>Interval</p>
-  <!-- <mat-form-field> -->
-    <input matInput [(ngModel)]="data? data.min : node.min" placeholder="Minimum" required>
-  <!-- </mat-form-field>
-  <mat-form-field> -->
-    <input matInput [(ngModel)]="data? data.max : node.max" placeholder="Maximum" required>
-  <!-- </mat-form-field> -->
+  <input matInput [(ngModel)]="data? data.min : node.min" placeholder="Minimum" required>
+  <input matInput [(ngModel)]="data? data.max : node.max" placeholder="Maximum" required>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data? data : node" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="data? data : node" cdkFocusInitial>Ok</button> -->
+
+  <input matInput [(ngModel)]="data.name" placeholder="Name" required>
+  <input matInput [(ngModel)]="data.amount" placeholder="Amount of children" required>
+  <p>Interval</p>
+  <input matInput [(ngModel)]="data.min" placeholder="Minimum" required>
+  <input matInput [(ngModel)]="data.max" placeholder="Maximum" required>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+
+
+
 </div>

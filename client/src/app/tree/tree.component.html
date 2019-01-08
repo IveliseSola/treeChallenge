@@ -3,31 +3,31 @@
         add</button>
     <ul class="tree-container">
         <li class="tree">
-            <i class="material-icons" *ngIf="filenode">
+            <i class="material-icons" *ngIf="root">
                 panorama_fish_eye
             </i>
-            <span class="root" *ngIf="filenode" (click)="openNodeDialog($event)">
-                {{filenode.filename}}
+            <span class="root" *ngIf="root" (click)="openNodeDialog($event)">
+                {{root.name}}
             </span>
-            <button class="mdc-icon-button material-icons tree-icons tree-edit" *ngIf="filenode" style="color:rgb(248, 232, 7)" (click)="openCreateNodeDialog($event)">
+            <button class="mdc-icon-button material-icons tree-icons tree-edit" *ngIf="root" style="color:rgb(248, 232, 7)" (click)="openCreateNodeDialog($event)">
                 edit
             </button>
-            <ul class="factoryNodes" *ngIf="filenode">
-                <li *ngFor="let child of filenode.children; let i = index" [attr.data-index]="i">
+            <ul class="factoryNodes" *ngIf="root">
+                <li *ngFor="let child of root.children; let i = index" [attr.data-index]="i">
                     <i id="arrow-icon" class="material-icons">
                         subdirectory_arrow_right
                     </i>
-                    {{child.filename}}
+                    {{child.name}}
                     <button class="mdc-icon-button material-icons tree-icons tree-edit" style="color:rgb(248, 232, 7)" [attr.data-index]="i"
                         (click)="openEditNodeDialog($event)">
                         edit
                     </button>
                     <ul class="node-leaf">
-                        <li *ngFor="let nodeLeaf of child.children">
+                        <li *ngFor="let nodeLeaf of child.leaves">
                             <i class="material-icons">
                                 arrow_right
                             </i>
-                            {{nodeLeaf.filename}}
+                            {{nodeLeaf.name}}
                         </li>
                     </ul>
                 </li>
