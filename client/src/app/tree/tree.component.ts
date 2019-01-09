@@ -1,12 +1,14 @@
-import { Component, Injectable, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit, OnChanges } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, } from '@angular/material';
 import { RootModalComponent } from '../root-modal/root-modal.component';
 import { NodeModalComponent } from '../node-modal/node-modal.component';
 import { NodeDataService } from 'src/app/Service/node-data.service';
+import {ChangeDetectorRef} from '@angular/core';
 
 import { Root } from 'src/app/Models/Root';
 import { NodeFactory } from 'src/app/Models/NodeFactory';
 import { NodeLeaf } from 'src/app/Models/NodeLeaf';
+// import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 
 export interface DialogData {
@@ -21,12 +23,12 @@ export interface DialogData {
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.css']
 })
-export class TreeComponent implements OnInit {
+export class TreeComponent implements OnInit,  OnChanges {
 
   root = new Root();
   nodeFactory = new NodeFactory();
 
-  constructor(public dialog: MatDialog, private service: NodeDataService) { }
+  constructor(public dialog: MatDialog, private service: NodeDataService, private ref: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.service.getRoot().subscribe(data => {
@@ -65,10 +67,12 @@ export class TreeComponent implements OnInit {
     });
     dialogNode.afterClosed().subscribe(result => {
       const nodeFactory = this.modifyTree(result);
-      this.root.children.push(nodeFactory);
+      // this.root.children.push(nodeFactory);
       this.service.updateTree(this.root.id, nodeFactory).subscribe(
         val => {
           console.log('PUT call successful value returned in body', val);
+          this.root.children.push(...val);
+          // this.ref.detectChanges();
         },
         response => {
           console.log('PUT call in error', response);
@@ -118,6 +122,13 @@ export class TreeComponent implements OnInit {
         );
       });
     });
+  }
+
+  deleteNode(event) {
+    const position = event.target.dataset.index;
+    // I should get the Id from the current nodefactory;
+    // this.service.deleteNodeFactory(idNf);
+    this.root.children.splice(position, 1);
   }
 
   modifyTree(node) {

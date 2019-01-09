@@ -84,11 +84,23 @@ router.route('/').put(
                 oldNode.set(req.body.data);
                 return root.save();
             }).then((root) => {
-                res.send({root});
+                res.send({ root });
                 console.log(root);
             }).catch(e => res.status(400).send(e));
     });
 
+// Delete a NodeFacctory
+router.route('/:idNF').delete(
+    (req, res) => {
+        rootModel.findOne({ 'children._id': req.params.idNF })
+            .then((root) => {
+                root.children.id(req.body.idNF).remove;
+                return root.save();
+            }).then((root) => {
+                res.send({ root });
+                console.log(root);
+            }).catch(e => res.status(400).send(e));
+    })
 app.use(router);
 
 app.listen(PORT, function () {

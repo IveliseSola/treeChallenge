@@ -22,6 +22,10 @@
                         (click)="openEditNodeDialog($event)">
                         edit
                     </button>
+                    <button class="mdc-icon-button material-icons tree-icons tree-delete" style="color:red" [attr.data-index]="i"
+                        (click)="deleteNode($event)">
+                        delete
+                    </button>
                     <ul class="node-leaf">
                         <li *ngFor="let nodeLeaf of child.leaves">
                             <i class="material-icons">

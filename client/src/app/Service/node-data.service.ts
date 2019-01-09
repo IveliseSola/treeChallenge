@@ -37,7 +37,6 @@ export class NodeDataService {
     return body || {};
   }
 
-
   getRoot(): Observable<any> {
     return this.http.get(apiUrl, httpOptions)
       .pipe(
@@ -50,7 +49,6 @@ export class NodeDataService {
       map(this.extractData),
       catchError(this.handleError));
   }
-
   updateChild(idRoot, idNF, data): Observable<any> {
     return this.http.put(apiUrl, { idRoot, idNF, data}, httpOptions)
     .pipe(
@@ -68,5 +66,11 @@ export class NodeDataService {
       .pipe(
       catchError(this.handleError)
       );
+  }
+  deleteNodeFactory(data): Observable<any> {
+    return this.http.delete(apiUrl + data,  httpOptions)
+    .pipe(
+      catchError(this.handleError)
+    );
   }
 }
