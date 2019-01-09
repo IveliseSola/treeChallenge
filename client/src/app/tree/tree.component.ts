@@ -1,15 +1,12 @@
-import { Component, Injectable, OnInit, OnChanges } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, } from '@angular/material';
 import { RootModalComponent } from '../root-modal/root-modal.component';
 import { NodeModalComponent } from '../node-modal/node-modal.component';
 import { NodeDataService } from 'src/app/Service/node-data.service';
-import {ChangeDetectorRef} from '@angular/core';
 
 import { Root } from 'src/app/Models/Root';
 import { NodeFactory } from 'src/app/Models/NodeFactory';
 import { NodeLeaf } from 'src/app/Models/NodeLeaf';
-// import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
-
 
 export interface DialogData {
   name: string;
@@ -23,12 +20,12 @@ export interface DialogData {
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.css']
 })
-export class TreeComponent implements OnInit,  OnChanges {
+export class TreeComponent implements OnInit {
 
   root = new Root();
   nodeFactory = new NodeFactory();
 
-  constructor(public dialog: MatDialog, private service: NodeDataService, private ref: ChangeDetectorRef) { }
+  constructor(public dialog: MatDialog, private service: NodeDataService) { }
 
   ngOnInit() {
     this.service.getRoot().subscribe(data => {
@@ -67,12 +64,19 @@ export class TreeComponent implements OnInit,  OnChanges {
     });
     dialogNode.afterClosed().subscribe(result => {
       const nodeFactory = this.modifyTree(result);
+      
+      /* So here I can add the element to the root but it wont have the id from the backend
+      but you can see the change automatically on the template */
+
       // this.root.children.push(nodeFactory);
+
       this.service.updateTree(this.root.id, nodeFactory).subscribe(
         val => {
           console.log('PUT call successful value returned in body', val);
+
+         /*  And here it's where I want to add the element to the list, but you cannot see the changes 
+         if you dont refresh the page */ 
           this.root.children.push(...val);
-          // this.ref.detectChanges();
         },
         response => {
           console.log('PUT call in error', response);
