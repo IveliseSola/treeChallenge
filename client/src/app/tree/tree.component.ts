@@ -23,7 +23,8 @@ export interface DialogData {
 export class TreeComponent implements OnInit {
 
   root = new Root();
-  nodeFactory = new NodeFactory();
+  caretEffect: Boolean = false;
+  activeVal: Boolean = false;
 
   constructor(public dialog: MatDialog, private service: NodeDataService) { }
 
@@ -43,13 +44,18 @@ export class TreeComponent implements OnInit {
       data: { name: '' }
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.root = {
+      const newRoot = {
         name: result,
         children: [],
         id: ''
       };
-      this.service.addNode(this.root).subscribe(
-        filenode => {
+      this.service.addNode(newRoot).subscribe(
+        rootResp => {
+          this.root  = {
+            name: rootResp.name,
+            children: [],
+            id: rootResp._id
+          };
         }, err => {
           console.log(err);
         }
@@ -64,22 +70,12 @@ export class TreeComponent implements OnInit {
     });
     dialogNode.afterClosed().subscribe(result => {
       const nodeFactory = this.modifyTree(result);
-      
-      /* So here I can add the element to the root but it wont have the id from the backend
-      but you can see the change automatically on the template */
-
-      // this.root.children.push(nodeFactory);
-
       this.service.updateTree(this.root.id, nodeFactory).subscribe(
-        val => {
-          console.log('PUT call successful value returned in body', val);
-
-         /*  And here it's where I want to add the element to the list, but you cannot see the changes 
-         if you dont refresh the page */ 
-          this.root.children.push(...val);
-        },
         response => {
-          console.log('PUT call in error', response);
+          this.root.children = response.children;
+        },
+        error => {
+          console.log('PUT call in error', error);
         },
         () => {
           console.log('The PUT observable is now completed.');
@@ -106,7 +102,7 @@ export class TreeComponent implements OnInit {
         // this.root.children.splice(position, 1);
         this.root.children[position].leaves.length = 0;
         this.root.children[position] = {
-          id: child._id,
+          _id: child._id,
           name: newNodeFactory.name,
           minValue: newNodeFactory.minValue,
           maxValue: newNodeFactory.maxValue,
@@ -114,11 +110,11 @@ export class TreeComponent implements OnInit {
         };
         // this.root.children.push(newNodeFactory);
         this.service.updateChild(this.root.id, child._id, newNodeFactory).subscribe(
-          val => {
-            console.log('PUT call successful value returned in body', val);
+          responde => {
+            console.log('PUT call successful value returned in body', responde);
           },
-          response => {
-            console.log('PUT call in error', response);
+          error => {
+            console.log('PUT call in error', error);
           },
           () => {
             console.log('The PUT observable is now completed.');
@@ -130,9 +126,17 @@ export class TreeComponent implements OnInit {
 
   deleteNode(event) {
     const position = event.target.dataset.index;
-    // I should get the Id from the current nodefactory;
-    // this.service.deleteNodeFactory(idNf);
+    const identifier = this.root.children[position]._id;
     this.root.children.splice(position, 1);
+    this.service.deleteNode(identifier).subscribe( data => {
+      console.log(data);
+    });
+  }
+
+  deleteTree(event) {
+    this.service.deleteNode(this.root.id);
+    this.root = new Root();
+    console.log(this.root);
   }
 
   modifyTree(node) {
@@ -152,4 +156,12 @@ export class TreeComponent implements OnInit {
     return nodeFactory;
   }
 
+  caretAnimation(event) {
+    // this.caretEffect = this.caretEffect ? false : true;
+    if (this.root.children.length) {
+      // then apply caret-down
+      this.caretEffect = true;
+      this.activeVal = true;
+    }
+  }
 }

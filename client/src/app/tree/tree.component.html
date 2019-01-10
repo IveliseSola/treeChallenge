@@ -3,34 +3,37 @@
         add</button>
     <ul class="tree-container">
         <li class="tree">
-            <i class="material-icons" *ngIf="root">
+            <!-- <i class="material-icons" *ngIf="root">
                 panorama_fish_eye
-            </i>
-            <span class="root" *ngIf="root" (click)="openNodeDialog($event)">
+            </i> -->
+            <span  *ngIf="root" (click)="caretAnimation($event)">
                 {{root.name}}
             </span>
             <button class="mdc-icon-button material-icons tree-icons tree-edit" *ngIf="root" style="color:rgb(248, 232, 7)" (click)="openCreateNodeDialog($event)">
                 edit
             </button>
-            <ul class="factoryNodes" *ngIf="root">
+            <button class="mdc-icon-button material-icons tree-icons tree-delete" style="color:red" (click)="deleteTree($event)">
+                delete
+            </button>
+            <ul *ngIf="root">
                 <li *ngFor="let child of root.children; let i = index" [attr.data-index]="i">
-                    <i id="arrow-icon" class="material-icons">
+                    <!-- <i id="arrow-icon" class="material-icons">
                         subdirectory_arrow_right
-                    </i>
-                    {{child.name}}
+                    </i> -->
+                    <span (click)="caretAnimation($event)"> {{child.name}} </span>
                     <button class="mdc-icon-button material-icons tree-icons tree-edit" style="color:rgb(248, 232, 7)" [attr.data-index]="i"
                         (click)="openEditNodeDialog($event)">
                         edit
                     </button>
-                    <button class="mdc-icon-button material-icons tree-icons tree-delete" style="color:red" [attr.data-index]="i"
-                        (click)="deleteNode($event)">
+                    <button class="mdc-icon-button material-icons tree-icons tree-delete" style="color:red" [attr.data-index]="i" (click)="deleteNode($event)">
                         delete
                     </button>
-                    <ul class="node-leaf">
+
+                    <ul>
                         <li *ngFor="let nodeLeaf of child.leaves">
-                            <i class="material-icons">
+                            <!-- <i class="material-icons">
                                 arrow_right
-                            </i>
+                            </i> -->
                             {{nodeLeaf.name}}
                         </li>
                     </ul>

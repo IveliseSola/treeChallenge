@@ -50,10 +50,10 @@ export class NodeDataService {
       catchError(this.handleError));
   }
   updateChild(idRoot, idNF, data): Observable<any> {
-    return this.http.put(apiUrl, { idRoot, idNF, data}, httpOptions)
-    .pipe(
-    catchError(this.handleError)
-    );
+    return this.http.put(apiUrl, { idRoot, idNF, data }, httpOptions)
+      .pipe(
+      catchError(this.handleError)
+      );
   }
   addNode(data): Observable<any> {
     return this.http.post(apiUrl, data, httpOptions)
@@ -67,10 +67,10 @@ export class NodeDataService {
       catchError(this.handleError)
       );
   }
-  deleteNodeFactory(data): Observable<any> {
-    return this.http.delete(apiUrl + data,  httpOptions)
-    .pipe(
+  deleteNode(data): Observable<any> {
+    return this.http.delete(apiUrl + data, httpOptions)
+      .pipe(
       catchError(this.handleError)
-    );
+      );
   }
 }

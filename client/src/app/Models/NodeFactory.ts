@@ -2,7 +2,7 @@ import { Node } from './Node';
 import { NodeLeaf } from './NodeLeaf';
 
 export class NodeFactory {
-    id: number;
+    _id: number;
     name: string;
     minValue: number;
     maxValue: number;

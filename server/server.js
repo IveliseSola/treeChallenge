@@ -57,6 +57,7 @@ router.route('/').get(
                 res.json(err);
             });
     });
+
 // Get a NodeFactory by position
 router.route('/:position').get(
     (req, res) => {
@@ -75,7 +76,7 @@ router.route('/:position').get(
         });
     });
 
-// Update a Nodefactory
+// Update a NodeFactory
 router.route('/').put(
     (req, res) => {
         rootModel.findOne({ 'children._id': req.body.idNF })
@@ -89,20 +90,21 @@ router.route('/').put(
             }).catch(e => res.status(400).send(e));
     });
 
-// Delete a NodeFacctory
+// Delete a NodeFactory
 router.route('/:idNF').delete(
     (req, res) => {
         rootModel.findOne({ 'children._id': req.params.idNF })
             .then((root) => {
-                root.children.id(req.body.idNF).remove;
+                root.children.id(req.params.idNF).remove();
                 return root.save();
+                console.log(root);
             }).then((root) => {
                 res.send({ root });
                 console.log(root);
             }).catch(e => res.status(400).send(e));
-    })
-app.use(router);
+    });
 
+app.use(router);
 app.listen(PORT, function () {
     console.log('listening on port 3000!');
 })
