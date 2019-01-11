@@ -26,7 +26,7 @@ export class TreeComponent implements OnInit {
   caretEffect: Boolean = false;
   activeVal: Boolean = false;
 
-  constructor(public dialog: MatDialog, private service: NodeDataService) { }
+  constructor(public dialog: MatDialog, private service: NodeDataService) {}
 
   ngOnInit() {
     this.service.getRoot().subscribe(data => {
