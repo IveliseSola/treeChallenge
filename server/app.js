@@ -17,9 +17,11 @@ const io = require('socket.io')(server);
 
 /* socket.io connection */
 io.on('connection', (socket) => {
-    console.log("Connected to Socket" + socket.id);
+    console.log("Connected to Socket " + socket.id);
+
     // Receiving a get request for the tree from Client
-    socket.on('getTree', () => {
+    socket.on('getTree', (msg) => {
+         console.log('firing the getTree method' + msg);
          controller.getTree(io); 
     });
     // Receiving a get request for a Node from Client
@@ -56,10 +58,8 @@ io.on('connection', (socket) => {
 
 /* Cors */
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
@@ -81,9 +81,9 @@ app.use('/', routes);
 // });
 
 /* catch 404 */
-// app.use((req, res, next) => {
-//     res.status(404).send('<h2 align=center>Page Not Found!</h2>');
-// });
+app.use((req, res, next) => {
+    res.status(404).send('<h2 align=center>Page Not Found!</h2>');
+});
 
 /* Start the server */
 server.listen(port, () => {

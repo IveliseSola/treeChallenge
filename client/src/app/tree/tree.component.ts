@@ -8,6 +8,9 @@ import { Root } from 'src/app/Models/Root';
 import { NodeFactory } from 'src/app/Models/NodeFactory';
 import { NodeLeaf } from 'src/app/Models/NodeLeaf';
 
+import io from 'socket.io-client';
+import * as socketIo from 'socket.io-client';
+
 export interface DialogData {
   name: string;
   amount: number;
@@ -22,20 +25,44 @@ export interface DialogData {
 })
 export class TreeComponent implements OnInit {
 
+  private apiUrl = 'http://localhost:3000/';
+  private socket;
+
   root = new Root();
   caretEffect: Boolean = false;
   activeVal: Boolean = false;
 
-  constructor(public dialog: MatDialog, private service: NodeDataService) {}
+  constructor(public dialog: MatDialog, private service: NodeDataService) { }
 
   ngOnInit() {
-    this.service.getRoot().subscribe(data => {
-      this.root = {
-        name: data[0].name,
-        id: data[0]._id,
-        children: data[0].children
-      };
-    });
+    // this.service.getRoot().subscribe(data => {
+    //   this.root = {
+    //     name: data[0].name,
+    //     id: data[0]._id,
+    //     children: data[0].children
+    //   };
+    // });
+
+    this.service.initSocket();
+    // this.socket = io.connect(this.apiUrl);
+    // this.service.getTree(this.socket, 'second message');
+    this.service.treeEmit();
+
+    // this.socket.on('getTree', (data) => {
+    //   console.log(data);
+    // });
+    this.service.getTree()
+      .subscribe((data) => {
+        this.root = {
+          name: data[0].name,
+          id: data[0]._id,
+          children: data[0].children
+        };
+      });
+    // this.socket.on('getNode', (data) => {
+    //   console.log(data);
+    // this.root.children.push(data.child);
+    // });
   }
 
   openCreateRootDialog(): void {
@@ -44,22 +71,28 @@ export class TreeComponent implements OnInit {
       data: { name: '' }
     });
     dialogRef.afterClosed().subscribe(result => {
-      const newRoot = {
+      const root = {
         name: result,
         children: [],
         id: ''
       };
-      this.service.addNode(newRoot).subscribe(
-        rootResp => {
-          this.root  = {
-            name: rootResp.name,
-            children: [],
-            id: rootResp._id
-          };
-        }, err => {
-          console.log(err);
-        }
-      );
+      // this.service.addNode(newRoot).subscribe(
+      //   rootResp => {
+      //     this.root = {
+      //       name: rootResp.name,
+      //       children: [],
+      //       id: rootResp._id
+      //     };
+      //   }, err => {
+      //     console.log(err);
+      //   }
+      // );
+
+      this.service.addNode(root);
+      this.service.treeEmit();
+      this.service.getTree();
+      // this.service.getChild('5c3cbc189d274e5b4bac5b1a', this.socket);
+
     });
   }
 
@@ -69,66 +102,87 @@ export class TreeComponent implements OnInit {
       data: { name: '' }
     });
     dialogNode.afterClosed().subscribe(result => {
-      const nodeFactory = this.modifyTree(result);
-      this.service.updateTree(this.root.id, nodeFactory).subscribe(
-        response => {
-          this.root.children = response.children;
-        },
-        error => {
-          console.log('PUT call in error', error);
-        },
-        () => {
-          console.log('The PUT observable is now completed.');
-        }
-      );
+      const nodeFactory = this.generateNodeFactory(result);
+      // this.service.updateTree(this.root.id, nodeFactory).subscribe(
+      //   response => {
+      //     this.root.children = response.children;
+      //   },
+      //   error => {
+      //     console.log('PUT call in error', error);
+      //   },
+      //   () => {
+      //     console.log('The PUT observable is now completed.');
+      //   }
+      // );
+
+      const obj = {
+        id: this.root.id,
+        subObj: nodeFactory
+      };
+
+      this.service.addNodeFactory(obj);
+
+      console.log('before the call');
+
+      this.service.getTree()
+        .subscribe((data) => {
+          console.log(data);
+          this.root = {
+            name: data[0].name,
+            id: data[0]._id,
+            children: data[0].children
+          };
+        });
+
+      console.log('after the call');
     });
   }
 
-  openEditNodeDialog(event) {
-    const position = event.target.dataset.index;
-    this.service.getChild(position).subscribe(data => {
-      const child = data[0].child;
-      const dialogEditNode = this.dialog.open(NodeModalComponent, {
-        width: '600px',
-        data: {
-          name: child.name,
-          amount: child.leaves.length,
-          min: child.minValue,
-          max: child.maxValue,
-        }
-      });
-      dialogEditNode.afterClosed().subscribe(result => {
-        const newNodeFactory = this.modifyTree(result);
-        // this.root.children.splice(position, 1);
-        this.root.children[position].leaves.length = 0;
-        this.root.children[position] = {
-          _id: child._id,
-          name: newNodeFactory.name,
-          minValue: newNodeFactory.minValue,
-          maxValue: newNodeFactory.maxValue,
-          leaves: newNodeFactory.leaves
-        };
-        // this.root.children.push(newNodeFactory);
-        this.service.updateChild(this.root.id, child._id, newNodeFactory).subscribe(
-          responde => {
-            console.log('PUT call successful value returned in body', responde);
-          },
-          error => {
-            console.log('PUT call in error', error);
-          },
-          () => {
-            console.log('The PUT observable is now completed.');
-          }
-        );
-      });
-    });
-  }
+  // openEditNodeDialog(event) {
+  //   const position = event.target.dataset.index;
+  //   this.service.getChild(position).subscribe(data => {
+  //     const child = data[0].child;
+  //     const dialogEditNode = this.dialog.open(NodeModalComponent, {
+  //       width: '600px',
+  //       data: {
+  //         name: child.name,
+  //         amount: child.leaves.length,
+  //         min: child.minValue,
+  //         max: child.maxValue,
+  //       }
+  //     });
+  //     dialogEditNode.afterClosed().subscribe(result => {
+  //       const newNodeFactory = this.generateNodeFactory(result);
+  //       // this.root.children.splice(position, 1);
+  //       this.root.children[position].leaves.length = 0;
+  //       this.root.children[position] = {
+  //         _id: child._id,
+  //         name: newNodeFactory.name,
+  //         minValue: newNodeFactory.minValue,
+  //         maxValue: newNodeFactory.maxValue,
+  //         leaves: newNodeFactory.leaves
+  //       };
+  //       // this.root.children.push(newNodeFactory);
+  //       this.service.updateChild(this.root.id, child._id, newNodeFactory).subscribe(
+  //         responde => {
+  //           console.log('PUT call successful value returned in body', responde);
+  //         },
+  //         error => {
+  //           console.log('PUT call in error', error);
+  //         },
+  //         () => {
+  //           console.log('The PUT observable is now completed.');
+  //         }
+  //       );
+  //     });
+  //   });
+  // }
 
   deleteNode(event) {
     const position = event.target.dataset.index;
     const identifier = this.root.children[position]._id;
     this.root.children.splice(position, 1);
-    this.service.deleteNode(identifier).subscribe( data => {
+    this.service.deleteNode(identifier).subscribe(data => {
       console.log(data);
     });
   }
@@ -139,7 +193,7 @@ export class TreeComponent implements OnInit {
     console.log(this.root);
   }
 
-  modifyTree(node) {
+  generateNodeFactory(node) {
     const max = +node.max;
     const min = +node.min;
     const nodeFactory = new NodeFactory(node.name, min, max);
@@ -152,7 +206,6 @@ export class TreeComponent implements OnInit {
     } else {
       throw new Error('Maximum amount allow is 15');
     }
-    console.log(nodeFactory);
     return nodeFactory;
   }
 

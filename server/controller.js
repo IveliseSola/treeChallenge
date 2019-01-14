@@ -32,10 +32,10 @@ module.exports.addRoot = (io, Root) => {
             console.log(result);
         })
 }
-module.exports.addNode = (io, NodeData) => {
-    rootModel.findOne({ _id: NodeData.rootId })
+module.exports.addNode = (io, obj) => {
+    rootModel.findOne({ _id: obj.id })
         .then((root) => {
-            root.children.push(NodeData.child);
+            root.children.push(obj.subObj);
             return root.save();
         }).then((root) => {
             const result = { 'success': true, 'message': 'Node Added Successfully', root }

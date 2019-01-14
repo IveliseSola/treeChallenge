@@ -8,17 +8,28 @@ import { throwError } from 'rxjs/internal/observable/throwError';
 import { Observable } from 'rxjs/internal/Observable';
 import { ResponseType } from '@angular/http/src/enums';
 
+import { Root } from '../Models/Root';
+import * as socketIo from 'socket.io-client';
+import { JSDocCommentStmt } from '@angular/compiler/src/output/output_ast';
+import { NodeFactory } from 'src/app/Models/NodeFactory';
+
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-const apiUrl = '//localhost:3000/';
+const apiUrl = 'http://localhost:3000/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NodeDataService {
+  private socket;
+  root = new Root();
+  nodeFactory = new NodeFactory();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -36,30 +47,63 @@ export class NodeDataService {
     return body || {};
   }
 
-  getRoot(): Observable<any> {
-    return this.http.get(apiUrl, httpOptions)
-      .pipe(
-      map(this.extractData),
-      catchError(this.handleError));
+  initSocket(): void {
+    this.socket = socketIo(apiUrl);
   }
-  getChild(data): Observable<any> {
-    return this.http.get(apiUrl + data, httpOptions)
-      .pipe(
-      map(this.extractData),
-      catchError(this.handleError));
+
+  // getRoot(): Observable<any> {
+  //   return this.http.get(apiUrl, httpOptions)
+  //     .pipe(
+  //     map(this.extractData),
+  //     catchError(this.handleError));
+  // }
+
+  // getChild(data): Observable<any> {
+  //   return this.http.get(apiUrl + data, httpOptions)
+  //     .pipe(
+  //     map(this.extractData),
+  //     catchError(this.handleError));
+  // }
+
+  treeEmit(): void {
+    this.socket.emit('getTree');
   }
+
+  getTree(): Observable<any> {
+    return new Observable<any>(observer => {
+      this.socket.on('getTree', (data) => {
+        observer.next(data.root);
+      });
+    });
+  }
+
+  // getChild(nodeFactoryId: String, socket): void {
+  //   socket.emit('getNode', nodeFactoryId);
+  // }
+
   updateChild(idRoot, idNF, data): Observable<any> {
     return this.http.put(apiUrl, { idRoot, idNF, data }, httpOptions)
       .pipe(
       catchError(this.handleError)
       );
   }
-  addNode(data): Observable<any> {
-    return this.http.post(apiUrl, data, httpOptions)
-      .pipe(
-      catchError(this.handleError)
-      );
+  // addNode(data): Observable<any> {
+  //   return this.http.post(apiUrl, data, httpOptions)
+  //     .pipe(
+  //     catchError(this.handleError)
+  //     );
+  // }
+
+  addNode(data): void {
+    this.socket.emit('addRoot', data);
   }
+
+  addNodeFactory(obj): void {
+    this.socket.emit('addNode', obj);
+  }
+
+
+
   updateTree(id, data): Observable<any> {
     return this.http.post(apiUrl + id, data, httpOptions)
       .pipe(
