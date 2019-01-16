@@ -4,11 +4,9 @@ const controller = require('./controller');
 
 /* Libraries */
 const express = require('express');
-// const router = require('express').Router();
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-// const rootModel = require('./models/Root');
 
 /* Socket */
 const app = require('express')();
@@ -21,7 +19,7 @@ io.on('connection', (socket) => {
 
     // Receiving a get request for the tree from Client
     socket.on('getTree', (msg) => {
-         console.log('firing the getTree method' + msg);
+         console.log('getTree method' + msg);
          controller.getTree(io); 
     });
     // Receiving a get request for a Node from Client
@@ -30,19 +28,19 @@ io.on('connection', (socket) => {
         controller.getNode(io, id);
     });
     // Receiving a root from Client
-    socket.on('addRoot', (Root) => {
-        console.log('socketData: ' + JSON.stringify(Root));
-        controller.addRoot(io, Root);
+    socket.on('addRoot', (root) => {
+        console.log('socketData: ' + JSON.stringify(root));
+        controller.addRoot(io, root);
     });
     // Receiving a new Node from Client
-    socket.on('addNode', (data) => {
-        console.log('socketData: ' + JSON.stringify(data));
-        controller.addNode(io, data);
+    socket.on('addNode', (nodeFactory) => {
+        console.log('socketData: ' + JSON.stringify(nodeFactory));
+        controller.addNode(io, nodeFactory);
     });
     // Recieving an Updated Node from Client
-    socket.on('updateNode', (NodeFactory) => {
-        console.log('socketData: ' + JSON.stringify(NodeFactory));
-        controller.updateNode(io, NodeFactory);
+    socket.on('updateNode', (nodeFactory) => {
+        console.log('socketData: ' + JSON.stringify(nodeFactory));
+        controller.updateNode(io, nodeFactory);
     });
     // Recieving a Node Id to Delete
     socket.on('deleteNode', (id) => {
@@ -74,106 +72,8 @@ const port = 3000;
 mongoose.connect("mongodb://localhost:27017/TreeAngularApp", { useNewUrlParser: true });
 
 app.use('/', routes);
-//app.use(router);
-
-// app.get('/', (req, res) => {
-//     return res.end('Api working');
-// });
-
-/* catch 404 */
-app.use((req, res, next) => {
-    res.status(404).send('<h2 align=center>Page Not Found!</h2>');
-});
 
 /* Start the server */
 server.listen(port, () => {
     console.log(`App Server Listening at ${port}`);
 });
-
-
-
-// // Creates a root
-// router.route('/').post(
-//     (req, res) => {
-//         rootModel.create(req.body)
-//             .then(function (node) {
-//                 res.json(node);
-//             }).catch(function (err) {
-//                 res.json(err);
-//             });
-//     });
-
-// // Add a NodeFactory to the Tree
-// router.route('/:id').post(
-//     (req, res) => {
-//         rootModel.findOne({ _id: req.params.id })
-//             .then((root) => {
-//                 root.children.push(req.body);
-//                 return root.save();
-//             }).then((root) => {
-//                 res.json(root);
-//                 console.log(root);
-//             }).catch(e => res.status(400).send(e));
-//     });
-
-// // Get the tree
-// router.route('/').get(
-//     (req, res) => {
-//         rootModel.find({})
-//             .then(function (node) {
-//                 res.json(node);
-//             })
-//             .catch(function (err) {
-//                 res.json(err);
-//             });
-//     });
-
-// // Get a NodeFactory by position
-// router.route('/:position').get(
-//     (req, res) => {
-//         rootModel.aggregate([
-//             {
-//                 $project: {
-//                     child: { $arrayElemAt: ['$children', parseInt(req.params.position)] }
-//                 }
-//             }
-//         ]).exec((err, child) => {
-//             if (err) {
-//                 console.log(err);
-//             } else {
-//                 res.json(child);
-//             }
-//         });
-//     });
-
-// // Update a NodeFactory
-// router.route('/').put(
-//     (req, res) => {
-//         rootModel.findOne({ 'children._id': req.body.idNF })
-//             .then((root) => {
-//                 const oldNode = root.children.id(req.body.idNF);
-//                 oldNode.set(req.body.data);
-//                 return root.save();
-//             }).then((root) => {
-//                 res.send({ root });
-//                 console.log(root);
-//             }).catch(e => res.status(400).send(e));
-//     });
-
-// // Delete a NodeFactory
-// router.route('/:idNF').delete(
-//     (req, res) => {
-//         rootModel.findOne({ 'children._id': req.params.idNF })
-//             .then((root) => {
-//                 root.children.id(req.params.idNF).remove();
-//                 return root.save();
-//             }).then((root) => {
-//                 res.send({ root });
-//             }).catch(e => res.status(400).send(e));
-//     });
-
-
-
-// app.listen(PORT, function () {
-//     console.log('listening on port 3000!');
-// })

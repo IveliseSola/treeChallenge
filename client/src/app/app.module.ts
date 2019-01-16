@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-// import { RouterModule, Routes } from '@angular/router';
+import {Component} from '@angular/core';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
